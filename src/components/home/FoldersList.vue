@@ -2,7 +2,7 @@
   <v-container>
     <div class="d-flex justify-space-between align-center pb-5">
       <div class="text-h4">My workouts :</div>
-      <v-btn icon @click="handleCloseFolder()">
+      <v-btn icon @click="switchDialogFolder()">
         <v-icon color="primary" size="28">mdi-folder-plus-outline</v-icon>
       </v-btn>
     </div>
@@ -13,7 +13,7 @@
             {{ folder.name }}
           </div>
 
-          <v-btn icon @click="handleCloseMore(folder.id)">
+          <v-btn icon @click="switchDialogMore(folder.id)">
             <v-icon color="primary">mdi-dots-horizontal</v-icon>
           </v-btn>
         </div>
@@ -22,6 +22,7 @@
             v-for="workout in folder.workouts"
             :key="workout.id"
             class="pa-3"
+            @click="switchDialogWorkoutDetails(workout.id)"
           >
             <Training :name="workout.name" :add="false" />
           </div>
@@ -32,10 +33,16 @@
       </div>
     </template>
     <v-dialog v-model="dialogFolder" max-width="290">
-      <NewFolder @handleCloseFolder="handleCloseFolder" />
+      <NewFolder @switchDialogFolder="switchDialogFolder" />
     </v-dialog>
     <v-dialog v-model="dialogMore" max-width="290">
-      <MoreFolder @handleCloseMore="handleCloseMore" :idFolder="idFolder" />
+      <MoreFolder @switchDialogMore="switchDialogMore" :idFolder="idFolder" />
+    </v-dialog>
+    <v-dialog v-model="dialogWorkoutDetails" max-width="290">
+      <WorkoutDetails
+        @switchDialogWorkoutDetails="switchDialogWorkoutDetails"
+        :idWorkout="idWorkout"
+      />
     </v-dialog>
   </v-container>
 </template>
@@ -44,6 +51,7 @@
 import Training from "./Training";
 import NewFolder from "./dialogs/NewFolder";
 import MoreFolder from "./dialogs/MoreFolder";
+import WorkoutDetails from "./dialogs/WorkoutDetails";
 export default {
   name: "FoldersList",
   data() {
@@ -52,24 +60,33 @@ export default {
       dialogFolder: false,
       dialogMore: false,
       idFolder: "",
+      dialogWorkoutDetails: false,
+      idWorkout: "",
     };
   },
   components: {
     Training,
     NewFolder,
     MoreFolder,
+    WorkoutDetails,
   },
   methods: {
     getFolders() {
       this.folders = this.$store.state.folders;
     },
-    handleCloseFolder() {
+    switchDialogFolder() {
       this.dialogFolder = !this.dialogFolder;
     },
-    handleCloseMore(idFolder) {
+    switchDialogMore(idFolder) {
       this.dialogMore = !this.dialogMore;
       if (this.dialogMore) {
         this.idFolder = idFolder;
+      }
+    },
+    switchDialogWorkoutDetails(idWorkout) {
+      this.dialogWorkoutDetails = !this.dialogWorkoutDetails;
+      if (this.dialogWorkoutDetails) {
+        this.idWorkout = idWorkout;
       }
     },
   },

@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-toolbar flat>
-      <v-btn icon @click="handleCloseFolder">
+      <v-btn icon @click="switchDialogFolder">
         <v-icon>mdi-close</v-icon>
       </v-btn>
       <v-spacer></v-spacer>
@@ -34,13 +34,13 @@ export default {
     ruleRequired: [(v) => !!v || "Ce champ est obligatoire"],
   }),
   methods: {
-    handleCloseFolder() {
-      this.$emit("handleCloseFolder");
+    switchDialogFolder() {
+      this.$emit("switchDialogFolder");
     },
     handleAdd: function () {
       if (this.$refs.formAddFolder.validate()) {
         this.$store.commit("newFolder", this.name);
-        this.handleClose();
+        this.switchDialogFolder();
       }
     },
   },
