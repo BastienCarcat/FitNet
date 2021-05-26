@@ -22,6 +22,6 @@ export default {
 
 <style scoped>
 * {
-  background-color: #f4f4f4;
+  background-color: var(--v-background-base);
 }
 </style>

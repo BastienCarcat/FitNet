@@ -1,7 +1,12 @@
 <template>
-  <div class="card d-flex justify-center align-center" elevation="0">
+  <div
+    v-bind:class="{ borderRed: add, borderBlack: !add }"
+    class="card d-flex justify-center align-center"
+    elevation="0"
+  >
     <div class="text">
-      {{ add ? "Press to add a new workout" : name }}
+      <v-icon v-if="add" color="primary" size="26">mdi-plus</v-icon>
+      <div v-else>{{ name }}</div>
     </div>
   </div>
 </template>
@@ -20,12 +25,17 @@ export default {
 .card {
   height: 150px;
   width: 150px;
-  border: 1px solid #1e201e;
   border-radius: 5%;
+}
+.borderBlack {
+  border: 1px solid var(--v-black-base);
+}
+.borderRed {
+  border: 1px solid var(--v-primary-base);
 }
 .text {
   padding: 15px;
   text-align: center;
-  color: #ca0202;
+  color: var(--v-primary-base);
 }
 </style>
