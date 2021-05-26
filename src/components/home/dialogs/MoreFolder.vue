@@ -7,9 +7,10 @@
       <!-- mettre le nom ici -->
       <v-toolbar-title>{{ idFolder }}</v-toolbar-title>
     </v-toolbar>
+
     <v-card-text class="d-flex justify-center flex-column">
       <v-btn text color="primary"> Edit </v-btn>
-      <v-btn tile color="primary">
+      <v-btn color="primary">
         <v-icon left>mdi-trash-can</v-icon>
         Delete
       </v-btn>

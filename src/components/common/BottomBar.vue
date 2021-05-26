@@ -6,7 +6,7 @@
     color="primary"
     grow
   >
-    <v-btn value="home" @click="$router.push('/home')">
+    <v-btn value="home" @click="$router.push({ name: 'Home' })">
       <span>Home</span>
 
       <v-icon>mdi-home</v-icon>

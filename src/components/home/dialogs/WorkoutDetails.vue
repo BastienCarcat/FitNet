@@ -17,16 +17,16 @@
             <v-list-item-title
               >{{ exercice.muscle }} : {{ exercice.name }}</v-list-item-title
             >
-            <v-list-item-subtitle
-              >{{ exercice.reps }} x {{ exercice.Kg }}Kg -
-              {{ exercice.rest }} rest</v-list-item-subtitle
+            <v-list-item-subtitle v-for="set in exercice.series" :key="set.id"
+              >{{ set.reps }} x {{ set.Kg }}Kg -
+              {{ set.rest }} rest</v-list-item-subtitle
             >
           </v-list-item-content>
         </v-list-item>
       </template>
     </v-list>
     <v-card-actions class="d-flex justify-center pa-3">
-      <v-btn tile color="primary" @click="handleStart">
+      <v-btn color="primary" @click="handleStart">
         <v-icon left>mdi-play</v-icon>
         Start workout
       </v-btn>
@@ -50,25 +50,52 @@ export default {
             id: "1",
             name: "Rowing",
             muscle: "Back",
-            reps: 10,
-            Kg: 10,
-            rest: "1'30",
+            series: [
+              {
+                id: "1",
+                reps: 10,
+                Kg: 10,
+                rest: "1'30",
+              },
+            ],
           },
           {
             id: "2",
             name: "Pull up",
             muscle: "Back",
-            reps: 10,
-            Kg: 10,
-            rest: "1'30",
+            series: [
+              {
+                id: "1",
+                reps: 10,
+                Kg: 10,
+                rest: "1'30",
+              },
+              {
+                id: "2",
+                reps: 10,
+                Kg: 10,
+                rest: "1'30",
+              },
+              {
+                id: "3",
+                reps: 10,
+                Kg: 10,
+                rest: "1'30",
+              },
+            ],
           },
           {
             id: "3",
             name: "Rowing machine",
             muscle: "Back",
-            reps: 10,
-            Kg: 10,
-            rest: "1'30",
+            series: [
+              {
+                id: "1",
+                reps: 10,
+                Kg: 10,
+                rest: "1'30",
+              },
+            ],
           },
         ],
       },
@@ -82,6 +109,12 @@ export default {
       // start session here
       this.switchDialogWorkoutDetails();
     },
+    // getFoldersExercices() {
+    // get all exercices by idWorkout
+    // }
+  },
+  created() {
+    this.getFoldersExercices();
   },
 };
 </script>

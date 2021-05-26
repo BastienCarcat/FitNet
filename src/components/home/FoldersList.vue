@@ -26,7 +26,15 @@
           >
             <Training :name="workout.name" :add="false" />
           </div>
-          <div class="pa-3">
+          <div
+            class="pa-3"
+            @click="
+              $router.push({
+                name: 'CreateWorkout',
+                params: { idFolder: folder.id },
+              })
+            "
+          >
             <Training :add="true" />
           </div>
         </div>

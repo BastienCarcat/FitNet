@@ -19,9 +19,14 @@ export default new Vuex.Store({
                 id: "1",
                 name: "Curl",
                 muscle: "Arms",
-                reps: 10,
-                Kg: 10,
-                rest: "1'30",
+                series: [
+                  {
+                    id: "1",
+                    reps: 10,
+                    Kg: 10,
+                    rest: "1'30",
+                  },
+                ],
               },
             ],
           },
@@ -39,25 +44,40 @@ export default new Vuex.Store({
                 id: "1",
                 name: "Rowing",
                 muscle: "Back",
-                reps: 10,
-                Kg: 10,
-                rest: "1'30",
+                series: [
+                  {
+                    id: "1",
+                    reps: 10,
+                    Kg: 10,
+                    rest: "1'30",
+                  },
+                ],
               },
               {
                 id: "2",
                 name: "Pull up",
                 muscle: "Back",
-                reps: 10,
-                Kg: 10,
-                rest: "1'30",
+                series: [
+                  {
+                    id: "1",
+                    reps: 10,
+                    Kg: 10,
+                    rest: "1'30",
+                  },
+                ],
               },
               {
                 id: "3",
                 name: "Rowing machine",
                 muscle: "Back",
-                reps: 10,
-                Kg: 10,
-                rest: "1'30",
+                series: [
+                  {
+                    id: "1",
+                    reps: 10,
+                    Kg: 10,
+                    rest: "1'30",
+                  },
+                ],
               },
             ],
           },
@@ -69,25 +89,40 @@ export default new Vuex.Store({
                 id: "1",
                 name: "Rowing",
                 muscle: "Back",
-                reps: 10,
-                Kg: 10,
-                rest: "1'30",
+                series: [
+                  {
+                    id: "1",
+                    reps: 10,
+                    Kg: 10,
+                    rest: "1'30",
+                  },
+                ],
               },
               {
                 id: "2",
                 name: "Pull up",
                 muscle: "Back",
-                reps: 10,
-                Kg: 10,
-                rest: "1'30",
+                series: [
+                  {
+                    id: "1",
+                    reps: 10,
+                    Kg: 10,
+                    rest: "1'30",
+                  },
+                ],
               },
               {
                 id: "3",
                 name: "Rowing machine",
                 muscle: "Back",
-                reps: 10,
-                Kg: 10,
-                rest: "1'30",
+                series: [
+                  {
+                    id: "1",
+                    reps: 10,
+                    Kg: 10,
+                    rest: "1'30",
+                  },
+                ],
               },
             ],
           },
@@ -105,21 +140,43 @@ export default new Vuex.Store({
                 id: "1",
                 name: "Bench press",
                 muscle: "Chest",
-                reps: 10,
-                Kg: 10,
-                rest: "1'30",
+                series: [
+                  {
+                    id: "1",
+                    reps: 10,
+                    Kg: 10,
+                    rest: "1'30",
+                  },
+                ],
               },
             ],
           },
         ],
       },
     ],
+    exercices: [
+      {
+        id: "1",
+        name: "Curl",
+        muscle: "Arms",
+      },
+      {
+        id: "2",
+        name: "Rowing",
+        muscle: "Back",
+      },
+    ],
   },
   mutations: {
     newFolder(state, payload) {
-      console.log(payload);
       const newFolder = { id: uuid.v4(), name: payload, wrokouts: [] };
       state.folders.push(newFolder);
+    },
+    newWorkoutInFolder(state, payload) {
+      const index = state.folders.findIndex(
+        (folder) => folder.id === payload.idFolder
+      );
+      state.folders[index].workouts.push(payload.workout);
     },
   },
   actions: {},
