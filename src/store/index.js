@@ -165,11 +165,47 @@ export default new Vuex.Store({
         name: "Rowing",
         muscle: "Back",
       },
+      {
+        id: "3",
+        name: "Pull up",
+        muscle: "Back",
+      },
+      {
+        id: "4",
+        name: "Push up",
+        muscle: "Chest",
+      },
+      {
+        id: "5",
+        name: "Squat",
+        muscle: "Legs",
+      },
+      {
+        id: "6",
+        name: "DeadLift",
+        muscle: "Back",
+      },
+      {
+        id: "7",
+        name: "Arnold press",
+        muscle: "Shoulders",
+      },
+      {
+        id: "8",
+        name: "Bench press",
+        muscle: "Chest",
+      },
+      {
+        id: "9",
+        name: "Dips",
+        muscle: "Arms",
+      },
     ],
+    muscles: ["Arms", "Chest", "Back", "Shoulders", "Abs", "Legs"],
   },
   mutations: {
     newFolder(state, payload) {
-      const newFolder = { id: uuid.v4(), name: payload, wrokouts: [] };
+      const newFolder = { id: uuid.v4(), name: payload, workouts: [] };
       state.folders.push(newFolder);
     },
     newWorkoutInFolder(state, payload) {
@@ -177,6 +213,14 @@ export default new Vuex.Store({
         (folder) => folder.id === payload.idFolder
       );
       state.folders[index].workouts.push(payload.workout);
+    },
+    newExercice(state, payload) {
+      const newExercice = {
+        id: uuid.v4(),
+        name: payload.name,
+        muscle: payload.muscle,
+      };
+      state.exercices.push(newExercice);
     },
   },
   actions: {},

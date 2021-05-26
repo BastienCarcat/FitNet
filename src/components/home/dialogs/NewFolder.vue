@@ -31,7 +31,7 @@ export default {
   name: "NewFolder",
   data: () => ({
     name: "",
-    ruleRequired: [(v) => !!v || "Ce champ est obligatoire"],
+    ruleRequired: [(v) => !!v || "This field is mandatory."],
   }),
   methods: {
     switchDialogFolder() {

@@ -1,11 +1,10 @@
 <template>
-  <v-bottom-navigation
-    background-color="white"
-    v-model="value"
-    app
-    color="primary"
-    grow
-  >
+  <v-bottom-navigation v-model="value" app color="primary" grow>
+    <v-btn value="exercices" @click="$router.push({ name: 'Exercices' })">
+      <span>Exercices</span>
+
+      <v-icon>mdi-dumbbell</v-icon>
+    </v-btn>
     <v-btn value="home" @click="$router.push({ name: 'Home' })">
       <span>Home</span>
 
@@ -20,8 +19,15 @@ export default {
   data: () => ({ value: "home" }),
   methods: {
     getCurrentRoute() {
-      if (this.$route.name === "Home") {
-        this.value = "home";
+      switch (this.$route.name) {
+        case "Home":
+          this.value = "home";
+          break;
+        case "Exercices":
+          this.value = "exercices";
+          break;
+        default:
+          break;
       }
     },
   },

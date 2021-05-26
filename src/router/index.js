@@ -19,6 +19,11 @@ const routes = [
     props: true,
     component: () => import("@/views/CreateWorkout.vue"),
   },
+  {
+    path: "/exercices",
+    name: "Exercices",
+    component: () => import("@/views/tabs/Exercices.vue"),
+  },
 ];
 
 const router = new VueRouter({
