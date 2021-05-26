@@ -16,9 +16,9 @@
       clearable
       dense
       hide-details
-      class="px-5"
+      class="px-5 pb-3"
     ></v-text-field>
-    <v-list two-line>
+    <v-list max-height="300" class="overflow" two-line>
       <v-list-item-group multiple v-model="selected" color="primary">
         <template v-for="exercice in searchExercices">
           <v-list-item :value="exercice" :key="exercice.id">
@@ -83,3 +83,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.overflow {
+  overflow-y: auto;
+}
+</style>

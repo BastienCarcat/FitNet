@@ -10,7 +10,7 @@
       hide-details
       class="pa-5"
     ></v-text-field>
-    <v-list color="background" two-line>
+    <v-list class="list" color="background" two-line>
       <template v-for="(exercice, index) in searchExercices">
         <v-divider v-show="index !== 0" :key="index" />
         <v-list-item :key="exercice.id">
@@ -83,5 +83,12 @@ export default {
   bottom: 80px;
   left: 50%;
   transform: translateX(-50%);
+}
+.list {
+  overflow-y: auto;
+  width: 100%;
+  top: 180px;
+  bottom: 130px;
+  position: fixed;
 }
 </style>
