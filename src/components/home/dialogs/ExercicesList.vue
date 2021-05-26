@@ -35,23 +35,34 @@
       </v-list-item-group>
     </v-list>
     <v-card-actions class="d-flex justify-center pa-3">
-      <v-btn color="primary">
+      <v-btn color="primary" @click="switchDialogCreate()">
         <v-icon left>mdi-open-in-new</v-icon>
         Create new exercice
       </v-btn>
     </v-card-actions>
+    <v-dialog v-model="dialogCreate" max-width="290">
+      <CreateExercice @switchDialogCreate="switchDialogCreate" />
+    </v-dialog>
   </v-card>
 </template>
 
 <script>
+import CreateExercice from "../../exercices/dialogs/CreateExercice";
 export default {
   name: "ExerciceList",
+  components: {
+    CreateExercice,
+  },
   data: () => ({
     search: "",
     exercices: [],
     selected: [],
+    dialogCreate: false,
   }),
   methods: {
+    switchDialogCreate() {
+      this.dialogCreate = !this.dialogCreate;
+    },
     switchDialogExercice() {
       this.$emit("switchDialogExercice");
     },
