@@ -107,7 +107,10 @@ export default {
     },
     handleStart: function () {
       // start session here
-      this.switchDialogWorkoutDetails();
+      this.$router.push({
+        name: "CurrentWorkout",
+        params: { idWorkout: this.idWorkout },
+      });
     },
     // getFoldersExercices() {
     // get all exercices by idWorkout

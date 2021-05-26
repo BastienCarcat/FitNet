@@ -24,6 +24,12 @@ const routes = [
     name: "Exercices",
     component: () => import("@/views/tabs/Exercices.vue"),
   },
+  {
+    path: "/current-workout/:idWorkout",
+    name: "CurrentWorkout",
+    props: true,
+    component: () => import("@/views/CurrentWorkout"),
+  },
 ];
 
 const router = new VueRouter({

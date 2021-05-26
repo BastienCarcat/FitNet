@@ -4,7 +4,7 @@
     <v-main>
       <router-view />
     </v-main>
-    <BottomBar />
+    <BottomBar v-show="showBottomBar" />
   </v-app>
 </template>
 
@@ -16,6 +16,15 @@ export default {
   components: {
     BottomBar,
     Header,
+  },
+  computed: {
+    showBottomBar() {
+      if (this.$route.name === "CurrentWorkout") {
+        return false;
+      } else {
+        return true;
+      }
+    },
   },
 };
 </script>

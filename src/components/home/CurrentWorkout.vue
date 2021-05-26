@@ -4,20 +4,14 @@
       <v-btn icon>
         <v-icon @click="goBack()">mdi-close</v-icon>
       </v-btn>
-      <v-text-field
-        v-model="name"
-        hide-details
-        dense
-        solo
-        class="pl-3"
-      ></v-text-field>
+      <v-toolbar-title>{{ workout.name }}</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
-        <v-btn text color="primary" @click="addWorkout()"> Save </v-btn>
+        <v-btn text color="primary" @click="addWorkout()"> Finish </v-btn>
       </v-toolbar-items>
     </v-toolbar>
     <v-container>
-      <template v-for="exercice in exercices">
+      <template v-for="exercice in workout.exercices">
         <div class="pt-3" :key="exercice.id">
           <div class="d-flex justify-space-between align-center">
             <div class="text-h5">
@@ -84,21 +78,21 @@
                 suffix="sec"
             /></v-col>
           </v-row>
-          <div class="d-flex justify-center pt-5">
+          <!-- <div class="d-flex justify-center pt-5">
             <v-btn outlined color="primary" @click="addSeries(exercice.id)">
               <v-icon left>mdi-plus</v-icon>
               Add series
             </v-btn>
-          </div>
+          </div> -->
         </div>
       </template>
 
-      <div class="d-flex justify-center py-5">
+      <!-- <div class="d-flex justify-center py-5">
         <v-btn color="primary" @click="switchDialogExercice()">
           <v-icon left>mdi-plus</v-icon>
           Add exercices
         </v-btn>
-      </div>
+      </div> -->
     </v-container>
     <v-dialog v-model="dialogExercice" max-width="290">
       <ExerciceList
@@ -110,85 +104,70 @@
 </template>
 
 <script>
-import ExerciceList from "./dialogs/ExercicesList";
 export default {
-  name: "CreateWorkout",
-  components: {
-    ExerciceList,
-  },
-  data() {
-    return {
-      name: "New workout",
-      dialogExercice: false,
+  name: "CurrentWorkout",
+  data: () => ({
+    workout: {
+      id: "1",
+      name: "Back day",
       exercices: [
         {
-          id: "1435RTDFV",
+          id: "1",
           name: "Rowing",
           muscle: "Back",
           series: [
             {
-              id: "18765432",
-              reps: 0,
-              Kg: 0,
-              rest: "0",
+              id: "1",
+              reps: 10,
+              Kg: 10,
+              rest: "1'30",
             },
+          ],
+        },
+        {
+          id: "2",
+          name: "Pull up",
+          muscle: "Back",
+          series: [
             {
-              id: "187632",
-              reps: 0,
-              Kg: 0,
-              rest: "0",
+              id: "1",
+              reps: 10,
+              Kg: 10,
+              rest: "1'30",
+            },
+          ],
+        },
+        {
+          id: "3",
+          name: "Rowing machine",
+          muscle: "Back",
+          series: [
+            {
+              id: "1",
+              reps: 10,
+              Kg: 10,
+              rest: "1'30",
             },
           ],
         },
       ],
-      newSet: {
-        reps: 0,
-        Kg: 0,
-        rest: "0",
-      },
-    };
-  },
+    },
+  }),
   methods: {
-    switchDialogExercice() {
-      this.dialogExercice = !this.dialogExercice;
-    },
-    // TODO: faire le delete series et exercice (à voir avec les bug d'id du fixme)
-    addSeries(idExercice) {
-      // axios : add series on exercice
-      // FIXME: bug quand on ajoute une série quand y a deux fois le même exo (même id)
-      const index = this.exercices.findIndex(
-        (exercice) => exercice.id === idExercice
-      );
-      this.exercices[index].series.push(this.newSet);
-    },
-    addWorkout() {
-      // axios : add workout in folder
-      const idFolder = this.$route.params.idFolder;
-      const workout = {
-        id: this.$uuid.v4(),
-        name: this.name,
-        exercices: this.exercices,
-      };
-      this.$store.commit("newWorkoutInFolder", {
-        idFolder: idFolder,
-        workout: workout,
-      });
-      this.goBack();
-    },
-    setExercices(selectedExercices) {
-      selectedExercices.forEach((exercice) => {
-        exercice = {
-          series: [{ id: this.$uuid.v4(), ...this.newSet }],
-          ...exercice,
-        };
-        this.exercices.push(exercice);
-      });
+    getWorkout() {
+      // axios : find workout (in folders) by idWorkout
+      // parce que la pas le temps de le faire sur la fausse donnée de vuex
+      // donc je met en dur dans la data
+      //   this.$route.params.idWorkout
     },
     goBack() {
       this.$router.push({ name: "Home" });
     },
+    finish() {
+      //TODO: à faire avec l'API directement parce que je vais devoir tout refaire
+      // et ça va être chiant à faire avec vuex
+      //FIXME: à voir si pendant le current workout on peut ajouter des exos et des séries
+    },
   },
 };
 </script>
-
-<style scoped></style>
