@@ -60,11 +60,12 @@ import Training from "./Training";
 import NewFolder from "./dialogs/NewFolder";
 import MoreFolder from "./dialogs/MoreFolder";
 import WorkoutDetails from "./dialogs/WorkoutDetails";
+import { mapState } from "vuex";
 export default {
   name: "FoldersList",
   data() {
     return {
-      folders: [],
+      // folders: [],
       dialogFolder: false,
       dialogMore: false,
       idFolder: "",
@@ -79,9 +80,9 @@ export default {
     WorkoutDetails,
   },
   methods: {
-    getFolders() {
-      this.folders = this.$store.state.folders;
-    },
+    // getFolders() {
+    //   this.folders = this.$store.state.folders;
+    // },
     switchDialogFolder() {
       this.dialogFolder = !this.dialogFolder;
     },
@@ -98,8 +99,11 @@ export default {
       }
     },
   },
-  created() {
-    this.getFolders();
+  computed: {
+    ...mapState(["folders"]),
+  },
+  mounted() {
+    this.$store.dispatch("getFolders", "8aaaa550-a7f6-4a14-886f-1dad8d742a2d");
   },
 };
 </script>

@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import { uuid } from "vue-uuid";
+import { Api } from "@/api";
 
 Vue.use(Vuex);
 
@@ -203,6 +204,7 @@ export default new Vuex.Store({
     ],
     muscles: ["Arms", "Chest", "Back", "Shoulders", "Abs", "Legs"],
   },
+  // les mutations sont obligatoirement synchrone et servent à changer le state
   mutations: {
     newFolder(state, payload) {
       const newFolder = { id: uuid.v4(), name: payload, workouts: [] };
@@ -222,7 +224,23 @@ export default new Vuex.Store({
       };
       state.exercices.push(newExercice);
     },
+    SET_FOLDERS(state, folders) {
+      state.folders = folders;
+    },
   },
-  actions: {},
+  // Exécute les requêtes API dans l'action car le code est asynchrone ici
+  // puis doit commit une mutation pour l'exécuter et changer le state
+  // pour exécuter une action, il faut la dispatch
+  actions: {
+    async getFolders(uuidUser) {
+      await Api.FolderApi.get(uuidUser);
+    },
+    async postFolder(uuidUser, nameFolder) {
+      await Api.FolderApi.post(uuidUser, nameFolder);
+    },
+    async delFolder(uuidUser, nameFolder) {
+      await Api.FolderApi.del(uuidUser, nameFolder);
+    },
+  },
   modules: {},
 });
