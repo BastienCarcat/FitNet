@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <Header />
+    <Header v-show="showHeader" />
     <v-main>
       <router-view />
     </v-main>
@@ -19,10 +19,25 @@ export default {
   },
   computed: {
     showBottomBar() {
-      if (this.$route.name === "CurrentWorkout") {
-        return false;
-      } else {
-        return true;
+      switch (this.$route.name) {
+        case "CurrentWorkout":
+          return false;
+        case "SignIn":
+          return false;
+        case "SignUp":
+          return false;
+        default:
+          return true;
+      }
+    },
+    showHeader() {
+      switch (this.$route.name) {
+        case "SignIn":
+          return false;
+        case "SignUp":
+          return false;
+        default:
+          return true;
       }
     },
   },
