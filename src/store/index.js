@@ -1,245 +1,139 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { uuid } from "vue-uuid";
 import { Api } from "@/api";
+import router from "../router/index";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    folders: [
-      {
-        id: "1",
-        name: "Arms",
-        workouts: [
-          {
-            id: "1",
-            name: "Arms day",
-            exercices: [
-              {
-                id: "1",
-                name: "Curl",
-                muscle: "Arms",
-                series: [
-                  {
-                    id: "1",
-                    reps: 10,
-                    Kg: 10,
-                    rest: "1'30",
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        id: "2",
-        name: "Back",
-        workouts: [
-          {
-            id: "1",
-            name: "Back day",
-            exercices: [
-              {
-                id: "1",
-                name: "Rowing",
-                muscle: "Back",
-                series: [
-                  {
-                    id: "1",
-                    reps: 10,
-                    Kg: 10,
-                    rest: "1'30",
-                  },
-                ],
-              },
-              {
-                id: "2",
-                name: "Pull up",
-                muscle: "Back",
-                series: [
-                  {
-                    id: "1",
-                    reps: 10,
-                    Kg: 10,
-                    rest: "1'30",
-                  },
-                ],
-              },
-              {
-                id: "3",
-                name: "Rowing machine",
-                muscle: "Back",
-                series: [
-                  {
-                    id: "1",
-                    reps: 10,
-                    Kg: 10,
-                    rest: "1'30",
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            id: "23",
-            name: "Back day half",
-            exercices: [
-              {
-                id: "1",
-                name: "Rowing",
-                muscle: "Back",
-                series: [
-                  {
-                    id: "1",
-                    reps: 10,
-                    Kg: 10,
-                    rest: "1'30",
-                  },
-                ],
-              },
-              {
-                id: "2",
-                name: "Pull up",
-                muscle: "Back",
-                series: [
-                  {
-                    id: "1",
-                    reps: 10,
-                    Kg: 10,
-                    rest: "1'30",
-                  },
-                ],
-              },
-              {
-                id: "3",
-                name: "Rowing machine",
-                muscle: "Back",
-                series: [
-                  {
-                    id: "1",
-                    reps: 10,
-                    Kg: 10,
-                    rest: "1'30",
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        id: "3",
-        name: "Chest",
-        workouts: [
-          {
-            id: "1",
-            name: "Chest day split",
-            exercices: [
-              {
-                id: "1",
-                name: "Bench press",
-                muscle: "Chest",
-                series: [
-                  {
-                    id: "1",
-                    reps: 10,
-                    Kg: 10,
-                    rest: "1'30",
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-    ],
-    exercices: [
-      {
-        id: "1",
-        name: "Curl",
-        muscle: "Arms",
-      },
-      {
-        id: "2",
-        name: "Rowing",
-        muscle: "Back",
-      },
-      {
-        id: "3",
-        name: "Pull up",
-        muscle: "Back",
-      },
-      {
-        id: "4",
-        name: "Push up",
-        muscle: "Chest",
-      },
-      {
-        id: "5",
-        name: "Squat",
-        muscle: "Legs",
-      },
-      {
-        id: "6",
-        name: "DeadLift",
-        muscle: "Back",
-      },
-      {
-        id: "7",
-        name: "Arnold press",
-        muscle: "Shoulders",
-      },
-      {
-        id: "8",
-        name: "Bench press",
-        muscle: "Chest",
-      },
-      {
-        id: "9",
-        name: "Dips",
-        muscle: "Arms",
-      },
-    ],
-    muscles: ["Arms", "Chest", "Back", "Shoulders", "Abs", "Legs"],
+    isLoggedIn: !!localStorage.getItem("user"),
+    folders: [],
+    exercises: [],
+    workouts: [],
+    workoutDetails: [],
+    // muscles: ["Arms", "Chest", "Back", "Shoulders", "Abs", "Legs"],
   },
   // les mutations sont obligatoirement synchrone et servent à changer le state
   mutations: {
-    newFolder(state, payload) {
-      const newFolder = { id: uuid.v4(), name: payload, workouts: [] };
-      state.folders.push(newFolder);
-    },
-    newWorkoutInFolder(state, payload) {
-      const index = state.folders.findIndex(
-        (folder) => folder.id === payload.idFolder
-      );
-      state.folders[index].workouts.push(payload.workout);
-    },
-    newExercice(state, payload) {
-      const newExercice = {
-        id: uuid.v4(),
-        name: payload.name,
-        muscle: payload.muscle,
-      };
-      state.exercices.push(newExercice);
-    },
     SET_FOLDERS(state, folders) {
       state.folders = folders;
+    },
+    SET_IS_LOGGED_IN(state) {
+      state.isLoggedIn = true;
+    },
+    SET_EXERCISES(state, exercises) {
+      state.exercises = exercises;
+    },
+    SET_WORKOUTS(state, workouts) {
+      state.workouts = workouts;
+    },
+    SET_WORKOUTS_DETAILS(state, workoutDetails) {
+      state.workoutDetails = workoutDetails;
     },
   },
   // Exécute les requêtes API dans l'action car le code est asynchrone ici
   // puis doit commit une mutation pour l'exécuter et changer le state
   // pour exécuter une action, il faut la dispatch
   actions: {
-    async getFolders(uuidUser) {
-      await Api.FolderApi.get(uuidUser);
+    async getFolders({ commit }, payload) {
+      try {
+        const response = await Api.FolderApi.get(payload.uuidUser);
+        commit("SET_FOLDERS", response.data);
+      } catch (err) {
+        console.error(err);
+      }
     },
-    async postFolder(uuidUser, nameFolder) {
-      await Api.FolderApi.post(uuidUser, nameFolder);
+    async postFolder({ dispatch }, payload) {
+      try {
+        await Api.FolderApi.post(payload.uuidUser, payload.nameFolder);
+        dispatch("getFolders", { uuidUser: payload.uuidUser });
+      } catch (err) {
+        console.error(err);
+      }
     },
-    async delFolder(uuidUser, nameFolder) {
-      await Api.FolderApi.del(uuidUser, nameFolder);
+    async delFolder({ dispatch }, payload) {
+      try {
+        await Api.FolderApi.del(payload.uuidUser, payload.nameFolder);
+        dispatch("getFolders", { uuidUser: payload.uuidUser });
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    async signIn({ commit }, payload) {
+      try {
+        const response = await Api.AuthenticationApi.signIn(
+          payload.email,
+          payload.password
+        );
+        commit("SET_IS_LOGGED_IN");
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("uuidUser", response.data.uuidUser);
+        router.push({ name: "Home" });
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    async signUp(_, payload) {
+      try {
+        await Api.AuthenticationApi.signUp(payload.email, payload.password);
+        router.push({ name: "SignIn" });
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    async getExercises({ commit }, payload) {
+      try {
+        const response = await Api.ExerciseApi.get(payload.uuidUser);
+        commit("SET_EXERCISES", response.data);
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    async postExercise({ dispatch }, payload) {
+      try {
+        await Api.ExerciseApi.post(payload.uuidUser, payload.nameExercise);
+        dispatch("getExercises", { uuidUser: payload.uuidUser });
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    async delExercise({ dispatch }, payload) {
+      try {
+        await Api.ExerciseApi.del(payload.uuidUser, payload.nameExercise);
+        dispatch("getExercises", { uuidUser: payload.uuidUser });
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    async postWorkout({ dispatch }, payload) {
+      try {
+        await Api.WorkoutApi.post(
+          payload.uuidUser,
+          payload.uuidFolder,
+          payload.nameWorkout,
+          payload.exercises
+        );
+        dispatch("getWorkouts", { uuidUser: payload.uuidUser });
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    async getWorkouts({ commit }, payload) {
+      try {
+        const response = await Api.WorkoutApi.getWorkout(payload.uuidUser);
+        commit("SET_WORKOUTS", response.data);
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    async getDetails({ commit }, payload) {
+      try {
+        const response = await Api.WorkoutApi.getWorkout(payload.uuidWorkout);
+        commit("SET_WORKOUTS_DETAILS", response.data);
+      } catch (err) {
+        console.error(err);
+      }
     },
   },
   modules: {},

@@ -39,7 +39,10 @@ export default {
     },
     handleAdd: function () {
       if (this.$refs.formAddFolder.validate()) {
-        this.$store.commit("newFolder", this.name);
+        this.$store.dispatch("postFolder", {
+          uuidUser: localStorage.getItem("uuidUser"),
+          nameFolder: this.name,
+        });
         this.switchDialogFolder();
       }
     },

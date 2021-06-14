@@ -1,7 +1,7 @@
 <template>
   <v-bottom-navigation v-model="value" app color="primary" grow>
     <v-btn value="exercices" @click="$router.push({ name: 'Exercices' })">
-      <span>Exercices</span>
+      <span>Exercises</span>
 
       <v-icon>mdi-dumbbell</v-icon>
     </v-btn>

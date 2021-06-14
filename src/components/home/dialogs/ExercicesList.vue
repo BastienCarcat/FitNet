@@ -20,15 +20,15 @@
     ></v-text-field>
     <v-list max-height="300" class="overflow" two-line>
       <v-list-item-group multiple v-model="selected" color="primary">
-        <template v-for="exercice in searchExercices">
-          <v-list-item :value="exercice" :key="exercice.id">
+        <template v-for="exercise in searchExercises">
+          <v-list-item :value="exercise" :key="exercise.uuidExercise">
             <v-list-item-avatar>
               <v-img src="../../../assets/logo.png"></v-img>
             </v-list-item-avatar>
 
             <v-list-item-content>
-              <v-list-item-title>{{ exercice.name }}</v-list-item-title>
-              <v-list-item-subtitle>{{ exercice.muscle }}</v-list-item-subtitle>
+              <v-list-item-title>{{ exercise.nameExercise }}</v-list-item-title>
+              <!-- <v-list-item-subtitle>{{ exercise.muscle }}</v-list-item-subtitle> -->
             </v-list-item-content>
           </v-list-item>
         </template>
@@ -47,6 +47,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import CreateExercice from "../../exercices/dialogs/CreateExercice";
 export default {
   name: "ExerciceList",
@@ -55,7 +56,6 @@ export default {
   },
   data: () => ({
     search: "",
-    exercices: [],
     selected: [],
     dialogCreate: false,
   }),
@@ -66,9 +66,6 @@ export default {
     switchDialogExercice() {
       this.$emit("switchDialogExercice");
     },
-    getExercices() {
-      this.exercices = this.$store.state.exercices;
-    },
     addExercices() {
       this.$emit("setExercices", this.selected);
       this.switchDialogExercice();
@@ -76,21 +73,24 @@ export default {
     },
   },
   computed: {
-    searchExercices() {
+    searchExercises() {
       if (this.search) {
-        return this.exercices.filter((item) => {
+        return this.exercises.filter((item) => {
           return this.search
             .toLowerCase()
             .split(" ")
-            .every((v) => item.name.toLowerCase().includes(v));
+            .every((v) => item.nameExercise.toLowerCase().includes(v));
         });
       } else {
-        return this.exercices;
+        return this.exercises;
       }
     },
+    ...mapState(["exercises"]),
   },
-  created() {
-    this.getExercices();
+  mounted() {
+    this.$store.dispatch("getExercises", {
+      uuidUser: localStorage.getItem("uuidUser"),
+    });
   },
 };
 </script>

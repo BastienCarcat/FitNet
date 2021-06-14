@@ -7,31 +7,32 @@
       </v-btn>
     </div>
     <template v-for="folder in folders">
-      <div :key="folder.id">
+      <div :key="folder.uuidFolder">
         <div class="d-flex justify-space-between align-center">
           <div class="text-h5">
-            {{ folder.name }}
+            {{ folder.nameFolder }}
           </div>
 
-          <v-btn icon @click="switchDialogMore(folder.id)">
+          <v-btn icon @click="switchDialogMore(folder.uuidFolder)">
             <v-icon color="primary">mdi-dots-horizontal</v-icon>
           </v-btn>
         </div>
         <div class="d-flex overflow-x-auto">
           <div
-            v-for="workout in folder.workouts"
-            :key="workout.id"
+            v-for="workout in workouts"
+            :key="workout.uuidWorkout"
+            v-show="workout.uuidFolder === folder.uuidFolder"
             class="pa-3"
-            @click="switchDialogWorkoutDetails(workout.id)"
+            @click="switchDialogWorkoutDetails(workout.uuidWorkout)"
           >
-            <Training :name="workout.name" :add="false" />
+            <Training :name="workout.nameWorkout" :add="false" />
           </div>
           <div
             class="pa-3"
             @click="
               $router.push({
                 name: 'CreateWorkout',
-                params: { idFolder: folder.id },
+                params: { idFolder: folder.uuidFolder },
               })
             "
           >
@@ -65,7 +66,6 @@ export default {
   name: "FoldersList",
   data() {
     return {
-      // folders: [],
       dialogFolder: false,
       dialogMore: false,
       idFolder: "",
@@ -80,9 +80,6 @@ export default {
     WorkoutDetails,
   },
   methods: {
-    // getFolders() {
-    //   this.folders = this.$store.state.folders;
-    // },
     switchDialogFolder() {
       this.dialogFolder = !this.dialogFolder;
     },
@@ -100,10 +97,16 @@ export default {
     },
   },
   computed: {
-    ...mapState(["folders"]),
+    ...mapState(["folders", "workouts"]),
   },
   mounted() {
-    this.$store.dispatch("getFolders", "8aaaa550-a7f6-4a14-886f-1dad8d742a2d");
+    const uuidUser = localStorage.getItem("uuidUser");
+    this.$store.dispatch("getFolders", {
+      uuidUser: uuidUser,
+    });
+    this.$store.dispatch("getWorkouts", {
+      uuidUser: uuidUser,
+    });
   },
 };
 </script>

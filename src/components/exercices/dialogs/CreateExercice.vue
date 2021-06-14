@@ -20,13 +20,13 @@
           required
           :rules="ruleRequired"
         />
-        <v-autocomplete
+        <!-- <v-autocomplete
           v-model="muscle"
           :items="muscles"
           outlined
           label="Muscle"
           :rules="ruleRequired"
-        />
+        /> -->
       </v-form>
     </v-card-text>
   </v-card>
@@ -36,8 +36,8 @@
 export default {
   name: "CreateExercice",
   data: () => ({
-    muscle: "",
-    muscles: [],
+    // muscle: "",
+    // muscles: [],
     name: "",
     ruleRequired: [(v) => !!v || "This field is mandatory."],
   }),
@@ -47,19 +47,19 @@ export default {
     },
     handleCreate: function () {
       if (this.$refs.formCreateExercice.validate()) {
-        this.$store.commit("newExercice", {
-          name: this.name,
-          muscle: this.muscle,
+        this.$store.dispatch("postExercise", {
+          uuidUser: localStorage.getItem("uuidUser"),
+          nameExercise: this.name,
         });
         this.switchDialogCreate();
       }
     },
-    getMuscles() {
-      this.muscles = this.$store.state.muscles;
-    },
+    // getMuscles() {
+    //   this.muscles = this.$store.state.muscles;
+    // },
   },
-  created() {
-    this.getMuscles();
-  },
+  // mounted() {
+  //   this.getMuscles();
+  // },
 };
 </script>

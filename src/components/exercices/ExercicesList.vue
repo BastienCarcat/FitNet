@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <div class="text-h4">Exercices :</div>
+    <div class="text-h4">Exercises :</div>
     <v-text-field
       v-model="search"
       placeholder="Search"
@@ -11,16 +11,16 @@
       class="pa-5"
     ></v-text-field>
     <v-list class="list" color="background" two-line>
-      <template v-for="(exercice, index) in searchExercices">
+      <template v-for="(exercise, index) in searchExercises">
         <v-divider v-show="index !== 0" :key="index" />
-        <v-list-item :key="exercice.id">
+        <v-list-item :key="exercise.uuidExercise">
           <v-list-item-avatar>
             <v-img src="../../assets/logo.png"></v-img>
           </v-list-item-avatar>
 
           <v-list-item-content>
-            <v-list-item-title>{{ exercice.name }}</v-list-item-title>
-            <v-list-item-subtitle>{{ exercice.muscle }}</v-list-item-subtitle>
+            <v-list-item-title>{{ exercise.nameExercise }}</v-list-item-title>
+            <!-- <v-list-item-subtitle>{{ exercise.muscle }}</v-list-item-subtitle> -->
           </v-list-item-content>
         </v-list-item>
       </template>
@@ -28,7 +28,7 @@
     <div class="fixed">
       <v-btn color="primary" @click="switchDialogCreate()">
         <v-icon left>mdi-open-in-new</v-icon>
-        Create new exercice
+        Create new exercise
       </v-btn>
     </div>
     <v-dialog v-model="dialogCreate" max-width="290">
@@ -36,43 +36,43 @@
     </v-dialog>
   </v-container>
 </template>
-
+//TODO: delete exercise
 <script>
 import CreateExercice from "./dialogs/CreateExercice";
+import { mapState } from "vuex";
 export default {
   name: "ExercicesList",
   components: {
     CreateExercice,
   },
   data: () => ({
-    exercices: [],
     search: "",
     dialogCreate: false,
   }),
   methods: {
-    getExercices() {
-      this.exercices = this.$store.state.exercices;
-    },
     switchDialogCreate() {
       this.dialogCreate = !this.dialogCreate;
     },
   },
   computed: {
-    searchExercices() {
+    searchExercises() {
       if (this.search) {
-        return this.exercices.filter((item) => {
+        return this.exercises.filter((item) => {
           return this.search
             .toLowerCase()
             .split(" ")
-            .every((v) => item.name.toLowerCase().includes(v));
+            .every((v) => item.nameExercise.toLowerCase().includes(v));
         });
       } else {
-        return this.exercices;
+        return this.exercises;
       }
     },
+    ...mapState(["exercises"]),
   },
-  created() {
-    this.getExercices();
+  mounted() {
+    this.$store.dispatch("getExercises", {
+      uuidUser: localStorage.getItem("uuidUser"),
+    });
   },
 };
 </script>

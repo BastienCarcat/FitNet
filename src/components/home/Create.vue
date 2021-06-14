@@ -17,11 +17,11 @@
       </v-toolbar-items>
     </v-toolbar>
     <v-container>
-      <template v-for="exercice in exercices">
-        <div class="pt-3" :key="exercice.id">
+      <template v-for="(exercise, indexExercise) in exercises">
+        <div class="pt-3" :key="exercise.uuidExercise">
           <div class="d-flex justify-space-between align-center">
             <div class="text-h5">
-              {{ exercice.name }}
+              {{ exercise.nameExercise }}
             </div>
 
             <v-btn icon>
@@ -44,8 +44,8 @@
           </v-row>
           <v-row
             class="pr-2"
-            v-for="(set, index) in exercice.series"
-            :key="set.id"
+            v-for="(set, index) in exercise.series"
+            :key="index"
           >
             <v-col class="d-flex justify-center" cols="3">{{
               index + 1
@@ -57,6 +57,7 @@
               <v-text-field
                 type="number"
                 :placeholder="set.reps"
+                v-model="set.reps"
                 hide-details
                 outlined
                 flat
@@ -66,7 +67,8 @@
             <v-col class="d-flex justify-center align-center px-2 py-0" cols="3"
               ><v-text-field
                 type="number"
-                :placeholder="set.Kg"
+                :placeholder="set.weight"
+                v-model="set.weight"
                 hide-details
                 outlined
                 flat
@@ -77,6 +79,7 @@
               ><v-text-field
                 type="number"
                 :placeholder="set.rest"
+                v-model="set.rest"
                 hide-details
                 outlined
                 flat
@@ -85,7 +88,7 @@
             /></v-col>
           </v-row>
           <div class="d-flex justify-center pt-5">
-            <v-btn outlined color="primary" @click="addSeries(exercice.id)">
+            <v-btn outlined color="primary" @click="addSeries(indexExercise)">
               <v-icon left>mdi-plus</v-icon>
               Add series
             </v-btn>
@@ -96,7 +99,7 @@
       <div class="d-flex justify-center py-5">
         <v-btn color="primary" @click="switchDialogExercice()">
           <v-icon left>mdi-plus</v-icon>
-          Add exercices
+          Add exercises
         </v-btn>
       </div>
     </v-container>
@@ -120,30 +123,10 @@ export default {
     return {
       name: "New workout",
       dialogExercice: false,
-      exercices: [
-        {
-          id: "1435RTDFV",
-          name: "Rowing",
-          muscle: "Back",
-          series: [
-            {
-              id: "18765432",
-              reps: 0,
-              Kg: 0,
-              rest: "0",
-            },
-            {
-              id: "187632",
-              reps: 0,
-              Kg: 0,
-              rest: "0",
-            },
-          ],
-        },
-      ],
+      exercises: [],
       newSet: {
-        reps: 0,
-        Kg: 0,
+        reps: "0",
+        weight: "0",
         rest: "0",
       },
     };
@@ -153,35 +136,30 @@ export default {
       this.dialogExercice = !this.dialogExercice;
     },
     // TODO: faire le delete series et exercice (à voir avec les bug d'id du fixme)
-    addSeries(idExercice) {
-      // axios : add series on exercice
-      // FIXME: bug quand on ajoute une série quand y a deux fois le même exo (même id)
-      const index = this.exercices.findIndex(
-        (exercice) => exercice.id === idExercice
-      );
-      this.exercices[index].series.push(this.newSet);
+    addSeries(indexExercise) {
+      this.exercises[indexExercise].series.push({ ...this.newSet });
     },
     addWorkout() {
-      // axios : add workout in folder
-      const idFolder = this.$route.params.idFolder;
-      const workout = {
-        id: this.$uuid.v4(),
-        name: this.name,
-        exercices: this.exercices,
-      };
-      this.$store.commit("newWorkoutInFolder", {
-        idFolder: idFolder,
-        workout: workout,
+      this.$store.dispatch("postWorkout", {
+        uuidUser: localStorage.getItem("uuidUser"),
+        uuidFolder: this.$route.params.idFolder,
+        nameWorkout: this.name,
+        exercises: this.exercises,
       });
       this.goBack();
     },
-    setExercices(selectedExercices) {
-      selectedExercices.forEach((exercice) => {
-        exercice = {
-          series: [{ id: this.$uuid.v4(), ...this.newSet }],
-          ...exercice,
+    // fonction appelée depuis la modale pour ajouter les nouveaux exercices
+    setExercices(selectedExercises) {
+      selectedExercises.forEach((exercise) => {
+        exercise = {
+          series: [
+            {
+              ...this.newSet,
+            },
+          ],
+          ...exercise,
         };
-        this.exercices.push(exercice);
+        this.exercises.push(exercise);
       });
     },
     goBack() {
