@@ -16,8 +16,11 @@ export default new Vuex.Store({
   },
   // les mutations sont obligatoirement synchrone et servent à changer le state
   mutations: {
-    SET_FOLDERS(state, folders) {
+    GET_FOLDERS(state, folders) {
       state.folders = folders;
+    },
+    POST_FOLDER(state, folder) {
+      state.folders.push(folder);
     },
     SET_IS_LOGGED_IN(state) {
       state.isLoggedIn = true;
@@ -39,15 +42,18 @@ export default new Vuex.Store({
     async getFolders({ commit }, payload) {
       try {
         const response = await Api.FolderApi.get(payload.uuidUser);
-        commit("SET_FOLDERS", response.data);
+        commit("GET_FOLDERS", response.data);
       } catch (err) {
         console.error(err);
       }
     },
-    async postFolder({ dispatch }, payload) {
+    async postFolder({ commit }, payload) {
       try {
-        await Api.FolderApi.post(payload.uuidUser, payload.nameFolder);
-        dispatch("getFolders", { uuidUser: payload.uuidUser });
+        const response = await Api.FolderApi.post(
+          payload.uuidUser,
+          payload.nameFolder
+        );
+        commit("POST_FOLDER", response.data);
       } catch (err) {
         console.error(err);
       }
